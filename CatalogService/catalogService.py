@@ -52,8 +52,8 @@ def get_book_by_id(id):
         row = cur.fetchone()
         # convert row object to dictionary
         print(row)
-        if row is Empty:
-            return {f"There is No book has id = {id}"}
+        if row is None:
+            return {"status":f"There is No book has id = {id}"}
         book["title"] = row["title"]
         book["quantity"] = row["quantity"]
         book["price"] = row["price"]
@@ -84,30 +84,63 @@ def searchBookByTopic(topic):
         conn.close()
     except Exception as e:
         print(e)
-        books = ["error to get books"]
+        return {"status":"error to get books"}
 
     return books  
 
-#To Find if there is a book in the stoke.
-def findBook():
-    pass
+#To Find if there is a book in the stoke. For Order Query......
+def findBook(id):
+    response = {}
+    book = {}
+    try:
+        conn = connect_to_db()
+        
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute("SELECT title,quantity,price,id FROM book WHERE id = ?",(id))
+        row = cur.fetchone()
+        # convert row object to dictionary
+        
+        if row is None:
+            return {"status":f"There is No book has id = {id}"}
+        book["title"] = row["title"]
+        book["quantity"] = row["quantity"]
+        book["price"] = row["price"]
+        book["id"] = row["id"]
+        response["beforePurchased"] = book
+        print()
+        print()
+        print(book)
+        print()
+        print()
+        conn.close()
+    except Exception as e:
+        print(e)
+        response = {"error to get book"}
+         
+    return response
 
 #To update Books price or quantity or both
-def update_book(book):
-    updated_book = {"status":"OK"}
+def update_book(id, book):
+    updated_book = {}
+    if book["quantity"] < 1:
+        updated_book = {"status":"NO"}
+        print(updated_book)
+        return updated_book
+    else:
+        updated_book = {"status":"OK"}
     try:
         conn = connect_to_db()
         cur = conn.cursor()
         cur.execute("UPDATE book SET quantity = ? WHERE id =?",  
-                     (book["quantity"]-1,  book["id"],))
+                     (book["quantity"]-1,  id,))
         conn.commit()
         #return the user
-        updated_book = get_book_by_id(book["id"])
+        updated_book["Item"] = get_book_by_id(id)
         
 
     except:
-        conn.rollback()
-        updated_book = {}
+        return {"status":f"There is no book with id = {book['id']}"}
     finally:
         conn.close()
 
@@ -131,7 +164,7 @@ def topic_api(topic):
 def findBook_api(id):
     return jsonify(findBook(id))
 
-@catalogService.route('/CATALOG_WEBSERVICE_IP/update/', methods=['PUT'])
-def update_api():
-    book = request.get_json()
-    return jsonify(update_book(book))
+@catalogService.route('/CATALOG_WEBSERVICE_IP/update/<id>', methods=['PUT'])
+def update_api(id):
+    response = request.get_json()
+    return jsonify(update_book(id, response["book"]))

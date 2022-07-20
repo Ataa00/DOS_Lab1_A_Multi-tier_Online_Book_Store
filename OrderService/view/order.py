@@ -14,25 +14,31 @@ def connect_to_db():
     return conn 
 
 def purchase(id):
-    query = requests.get("http://192.168.1.204:8787/CATALOG_WEBSERVICE_IP/info")
+    query = requests.get(f"http://127.0.0.1:8787/CATALOG_WEBSERVICE_IP/findBook/{id}")
     
     id = int(id)
     
-    books = json.loads(query.text)
-
+    queryResponse = json.loads(query.text)
+    print(queryResponse)
     flag = False
-    for book in books:
-        if book["id"] == id:
-            flag = True
+    
+    book = queryResponse["beforePurchased"]
+
+    print(book)
+
+    if book["id"] == id:
+        flag = True
 
     if flag:
         request = {
-            "id":id
+            "book":book
         }
-        Update = requests.put("http://192.168.1.204:8787/CATALOG_WEBSERVICE_IP/update", json=request)
-        response = json.loads(Update.text)
-        if response["status"] == "OK":
-            return "Done"
+        Update = requests.put(f"http://127.0.0.1:8787/CATALOG_WEBSERVICE_IP/update/{id}", json=request)
+        response = {}
+        response["BeforePurchased"] =  book
+        response["AfterPurchased"] = json.loads(Update.text)
+        if response["AfterPurchased"]["status"] == "OK":
+            return response
         else:
             return "There is no enough books in the storage."
     else:
