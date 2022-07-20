@@ -86,6 +86,9 @@ def searchBookByTopic(topic):
         print(e)
         return {"status":"error to get books"}
 
+    if books == []:
+        return {"status":f"There is no books with this topic {topic}"}
+
     return books  
 
 #To Find if there is a book in the stoke. For Order Query......
@@ -102,7 +105,7 @@ def findBook(id):
         # convert row object to dictionary
         
         if row is None:
-            return {"status":f"There is No book has id = {id}"}
+            return {"status":"NO"}
         book["title"] = row["title"]
         book["quantity"] = row["quantity"]
         book["price"] = row["price"]

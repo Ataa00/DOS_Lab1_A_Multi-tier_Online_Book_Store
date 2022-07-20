@@ -22,6 +22,9 @@ def purchase(id):
     print(queryResponse)
     flag = False
     
+    if queryResponse["status"] == "NO":
+        return {"status": "There is no book with this ID"}
+
     book = queryResponse["beforePurchased"]
 
     print(book)
