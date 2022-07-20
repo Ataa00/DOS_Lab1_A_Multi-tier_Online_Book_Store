@@ -26,9 +26,9 @@ def get_books():
         # convert row objects to dictionary
         for i in rows:
             book = {}
-            book["id"] = i["id"]
+            # book["id"] = i["id"]
             book["title"] = i["title"]
-            book["topic"] = i["topic"]
+            # book["topic"] = i["topic"]
             book["quantity"] = i["quantity"]
             book["price"] = i["price"]
             books.append(book)
@@ -88,41 +88,50 @@ def searchBookByTopic(topic):
 
     return books  
 
+#To Find if there is a book in the stoke.
+def findBook():
+    pass
+
 #To update Books price or quantity or both
 def update_book(book):
     updated_book = {"status":"OK"}
-    # try:
-    #     conn = connect_to_db()
-    #     cur = conn.cursor()
-    #     cur.execute("UPDATE book SET quantity = ?, price =? WHERE id =?",  
-    #                  (book["quantity"], book["price"], book["id"],))
-    #     conn.commit()
-    #     #return the user
-    #     updated_book = get_book_by_id(book["id"])
+    try:
+        conn = connect_to_db()
+        cur = conn.cursor()
+        cur.execute("UPDATE book SET quantity = ? WHERE id =?",  
+                     (book["quantity"]-1,  book["id"],))
+        conn.commit()
+        #return the user
+        updated_book = get_book_by_id(book["id"])
+        
 
-    # except:
-    #     conn.rollback()
-    #     updated_book = {}
-    # finally:
-    #     conn.close()
+    except:
+        conn.rollback()
+        updated_book = {}
+    finally:
+        conn.close()
 
     print(updated_book)
 
     return updated_book
 
-@catalog.route("/CATALOG_WEBSERVICE_IP/info")
+@catalogService.route("/CATALOG_WEBSERVICE_IP/info")
 def books_api():
     return jsonify(get_books()) 
 
-@catalog.route('/CATALOG_WEBSERVICE_IP/info/<id>', methods=['GET'])
+@catalogService.route('/CATALOG_WEBSERVICE_IP/info/<id>', methods=['GET'])
 def get_api(id):
     return jsonify(get_book_by_id(id)) 
 
-@catalog.route("/CATALOG_WEBSERVICE_IP/search/<topic>", methods=['GET'])
+@catalogService.route("/CATALOG_WEBSERVICE_IP/search/<topic>", methods=['GET'])
 def topic_api(topic):
     return jsonify(searchBookByTopic(topic)) 
 
-@catalog.route('/CATALOG_WEBSERVICE_IP/info', methods=['PUT'])
+@catalogService.route('/CATALOG_WEBSERVICE_IP/findBook/<id>', methods=['GET'])
+def findBook_api(id):
+    return jsonify(findBook(id))
+
+@catalogService.route('/CATALOG_WEBSERVICE_IP/update/', methods=['PUT'])
 def update_api():
     book = request.get_json()
     return jsonify(update_book(book))
