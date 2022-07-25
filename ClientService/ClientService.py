@@ -31,7 +31,7 @@ def searchBookByTopic(topic):
 
 def purchase(id):
     query = requests.get(f"http://127.0.0.1:8788/ORDER_WEBSERVICE_IP/purchase/{id}")
-    
+    print(query.text)
     queryResponse = json.loads(query.text)
     
     return queryResponse

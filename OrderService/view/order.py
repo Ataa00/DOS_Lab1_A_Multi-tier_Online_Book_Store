@@ -43,7 +43,7 @@ def purchase(id):
         if response["AfterPurchased"]["status"] == "OK":
             return response
         else:
-            return "There is no enough books in the storage."
+            return {"book":book,"Message":"There is no enough books in the storage."}
     else:
         return "There is no book with this ID"
 

@@ -120,14 +120,14 @@ def findBook(id):
     except Exception as e:
         print(e)
         response = {"error to get book"}
-         
+    response["status"] = "YES"    
     return response
 
 #To update Books price or quantity or both
 def update_book(id, book):
     updated_book = {}
     if book["quantity"] < 1:
-        updated_book = {"status":"NO"}
+        updated_book = {"status":"NO", "Message":"There is no enogh book in the store."}
         print(updated_book)
         return updated_book
     else:
