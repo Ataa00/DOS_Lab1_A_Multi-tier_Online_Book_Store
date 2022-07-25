@@ -1,0 +1,1 @@
+UPDATE book SET quantity = 2 WHERE id =3;
