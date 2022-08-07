@@ -1,0 +1,5 @@
+flask
+requests
+Blueprint
+sqlite3
+json

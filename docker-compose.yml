@@ -1,0 +1,50 @@
+services:
+  catalog:
+    build:
+      context: ./catalog
+    command: [ "flask", "run", "--host=0.0.0.0"]
+    ports:
+      - 8081:5000
+    expose:
+      - 5000
+
+  catalog2:
+    build:
+      context: ./catalog
+    command: [ "flask", "run", "--host=0.0.0.0" ]
+    ports:
+      - 8083:5000
+    expose:
+      - 5000
+
+
+  order:
+    build:
+      context: ./order
+    command: [ "flask", "run", "--host=0.0.0.0" ]
+    environment:
+      - CATALOG=http://catalog:5000
+    ports:
+      - 8082:5000
+    expose:
+      - 5000
+
+  order2:
+    build:
+      context: ./order
+    command: [ "flask", "run", "--host=0.0.0.0" ]
+    environment:
+      - CATALOG=http://catalog2:5000
+    ports:
+      - 8084:5000
+    expose:
+      - 5000
+
+  frontend:
+    build:
+      context: ./frontEnd
+    command: [ "flask", "run", "--host=0.0.0.0"]
+    ports:
+      - 8080:5000
+    expose:
+      - 5000

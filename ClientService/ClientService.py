@@ -1,48 +1,55 @@
 from queue import Empty
 from flask import Flask,Blueprint, render_template, request, jsonify ,url_for, flash, redirect
-import sqlite3 
 import requests
 import json
 
 ClientService=Blueprint('ClientService',__name__)
 
+cache = {}
+catalog1 = "http://catalog:5000"
+oreder1 = "http://order:5000"
+
+catalog2 = "http://catalog2:5000"
+oreder2 = "http://order2:5000"
+
+#load balancing alg round-robin
+robin = False
+
+
+#forward to catalog server-info
 def get_books():
-    query = requests.get(f"http://127.0.0.1:8787/CATALOG_WEBSERVICE_IP/info")
-    
+    global robin
+    robin = not robin
+    query =  requests.get((catalog1 if robin else catalog2)+"/ORDER_WEBSERVICE_IP/info")
     queryResponse = json.loads(query.text)
-    
     return queryResponse
 
 def get_book_by_id(id):
-    query = requests.get(f"http://127.0.0.1:8787/CATALOG_WEBSERVICE_IP/info/{id}")
-    
-    queryResponse = json.loads(query.text)
-    
-    return queryResponse
+    global robin
+    robin = not robin
+    if(id not in cache):
+        cache[id] = requests.get((catalog1 if robin else catalog2)+"/ORDER_WEBSERVICE_IP/info/%s" % id).content
+    print(cache)
+    return cache[id]
 
+    
 def searchBookByTopic(topic):
     print(topic)
-    
-    query = requests.get(f"http://127.0.0.1:8787/CATALOG_WEBSERVICE_IP/search/{topic}")
-    
-    queryResponse = json.loads(query.text)
-    
-    return queryResponse
+    global robin
+    robin = not robin
+    if (topic not in cache):
+        cache[topic] = requests.get((catalog1 if robin else catalog2)+"/ORDER_WEBSERVICE_IP/search/%s" % topic).content
+    return cache[topic]
 
 def purchase(id):
-    query = requests.get(f"http://127.0.0.1:8788/ORDER_WEBSERVICE_IP/purchase/{id}")
-    print()
-    print()
-    print()
-    print(query.text)
-    print()
-    print()
-    print()
-    queryResponse = json.loads(query.text)
+    global robin
+    robin = not robin
+    if (id in cache):
+        cache.pop(id)
+    requests.get((oreder1) + "/ORDER_WEBSERVICE_IP/purchase/%s" % id)
+    return requests.get((oreder2)+"/ORDER_WEBSERVICE_IP/purchase/%s" % id).content
+
     
-    return queryResponse
-
-
 @ClientService.route("/Bazar/info")
 def books_api():
     return jsonify(get_books()) 
