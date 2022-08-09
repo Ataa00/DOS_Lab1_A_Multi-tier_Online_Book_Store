@@ -20,7 +20,7 @@ robin = False
 def get_books():
     global robin
     robin = not robin
-    query =  requests.get((catalog1 if robin else catalog2)+"/ORDER_WEBSERVICE_IP/info")
+    query =  requests.get((catalog1 if robin else catalog2)+"yyyyyyy/CATALOG_WEBSERVICE_IP/info")
     queryResponse = json.loads(query.text)
     return queryResponse
 
@@ -28,7 +28,7 @@ def get_book_by_id(id):
     global robin
     robin = not robin
     if(id not in cache):
-        cache[id] = requests.get((catalog1 if robin else catalog2)+"/ORDER_WEBSERVICE_IP/info/%s" % id).content
+        cache[id] = requests.get((catalog1 if robin else catalog2)+"/CATALOG_WEBSERVICE_IP/info/%s" % id).content
     print(cache)
     return cache[id]
 
@@ -38,7 +38,7 @@ def searchBookByTopic(topic):
     global robin
     robin = not robin
     if (topic not in cache):
-        cache[topic] = requests.get((catalog1 if robin else catalog2)+"/ORDER_WEBSERVICE_IP/search/%s" % topic).content
+        cache[topic] = requests.get((catalog1 if robin else catalog2)+"/CATALOG_WEBSERVICE_IP/search/%s" % topic).content
     return cache[topic]
 
 def purchase(id):

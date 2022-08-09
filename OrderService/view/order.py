@@ -2,6 +2,8 @@ from flask import Flask,Blueprint, render_template, request, jsonify ,url_for, f
 import sqlite3
 import requests
 import json
+import os
+
 
 order=Blueprint('order',__name__)
 
@@ -14,8 +16,8 @@ def connect_to_db():
     return conn 
 
 def purchase(id):
-    query = requests.get(f"http://127.0.0.1:8787/CATALOG_WEBSERVICE_IP/findBook/{id}")
-    
+    query =requests.get(f"/CATALOG_WEBSERVICE_IP/findBook/%s" % id)
+
     id = int(id)
     
     queryResponse = json.loads(query.text)
@@ -36,7 +38,8 @@ def purchase(id):
         request = {
             "book":book
         }
-        Update = requests.put(f"http://127.0.0.1:8787/CATALOG_WEBSERVICE_IP/update/{id}", json=request)
+        Update =requests.get(os.environ['CATALOG']+"/CATALOG_WEBSERVICE_IP/update/%s" % id,json=request)
+
         response = {}
         response["BeforePurchased"] =  book
         response["AfterPurchased"] = json.loads(Update.text)
