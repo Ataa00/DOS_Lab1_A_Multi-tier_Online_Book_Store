@@ -8,11 +8,11 @@ This project is about create a multi-tier online book store called Bazar.com
 
 `docker-compose up`
 - The five services should be running
-- The Client-Service can be accessed on [localhost:8080](http://localhost:8080)
-- The catalog-Service1 can be accessed on [localhost:8081](http://localhost:8081)
-- The catalog-Service2 can be accessed on [localhost:8083](http://localhost:8083)
-- The orders-Service1 can be accessed on [localhost:8082](http://localhost:8082)
-- The orders-Service2 can be accessed on [localhost:8084](http://localhost:8084)
+- The Client-Service can be accessed on localhost:8080
+- The catalog-Service1 can be accessed on localhost:8081
+- The catalog-Service2 can be accessed on localhost:8083
+- The orders-Service1 can be accessed on localhost:8082
+- The orders-Service2 can be accessed on localhost:8084
 
 ## Orders Server Endpoints 
 - To purchase a book use : `purchase/<id>` using GET methods
