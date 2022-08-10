@@ -35,6 +35,7 @@ To meet replication, cashing, Consistancy and load palancing. We do the followin
 - For cashing we defind an array to keep the request we got from the catalog which could be ger info for a book so we cahed it in the array.
 - For load palancing we create a flage for each endpoint so that it togles the flag which swich from take request for egsample form the server CatalogSercice1 or CatalogSercice2.
 - For Consistecy when we order a book to purchase it. We handle this request and we make the order server to update the two Databases to dicrease the quantite of the requested book.  
+- For Consistecy when we order a book to purchase it.we delete(pop) book by id from cache
 
 # Considerations and Possible Improvements
 A GUI can be used with FrontEnd server
