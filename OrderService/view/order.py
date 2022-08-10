@@ -4,6 +4,13 @@ import requests
 import json
 import os
 
+catalog1 = "http://catalog:5000"
+
+catalog2 = "http://catalog2:5000"
+
+#load balancing alg round-robin
+robin = False
+
 
 order=Blueprint('order',__name__)
 
@@ -16,8 +23,18 @@ def connect_to_db():
     return conn 
 
 def purchase(id):
-    query =requests.get(f"/CATALOG_WEBSERVICE_IP/findBook/%s" % id)
-
+    global robin
+    robin = not robin
+    if robin:
+        ip = catalog1+"/CATALOG_WEBSERVICE_IP/findBook/"
+        
+    else:
+        ip = catalog2+"/CATALOG_WEBSERVICE_IP/findBook/"
+        
+    
+    print(ip)
+    ip = ip + id
+    query = requests.get(ip)
     id = int(id)
     
     queryResponse = json.loads(query.text)
@@ -38,17 +55,26 @@ def purchase(id):
         request = {
             "book":book
         }
-        Update =requests.get(os.environ['CATALOG']+"/CATALOG_WEBSERVICE_IP/update/%s" % id,json=request)
+
+        ip = catalog1+"/CATALOG_WEBSERVICE_IP/update/"
+        ip2 = catalog2+"/CATALOG_WEBSERVICE_IP/update/"
+            
+        print(ip)
+        ip = ip + str(id)
+        ip2 = ip2 + str(id)
+
+        Update = requests.put(ip, json=request).text
+        Update2 = requests.put(ip2, json=request).text
 
         response = {}
         response["BeforePurchased"] =  book
-        response["AfterPurchased"] = json.loads(Update.text)
+        response["AfterPurchased"] = json.loads(Update)
         if response["AfterPurchased"]["status"] == "OK":
             return response
         else:
             return {"book":book,"Message":"There is no enough books in the storage."}
     else:
-        return "There is no book with this ID"
+        return {"msg":"There is no book with this ID"}
 
 @order.route('/ORDER_WEBSERVICE_IP/purchase/<id>')
 def home_page(id):

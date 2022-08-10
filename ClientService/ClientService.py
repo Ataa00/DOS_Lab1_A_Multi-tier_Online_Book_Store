@@ -18,9 +18,18 @@ robin = False
 
 #forward to catalog server-info
 def get_books():
+   
     global robin
     robin = not robin
-    query =  requests.get((catalog1 if robin else catalog2)+"yyyyyyy/CATALOG_WEBSERVICE_IP/info")
+    if robin:
+        ip = catalog1+"/CATALOG_WEBSERVICE_IP/info"
+        print(ip)
+        query =  requests.get(ip)
+    else:
+        ip = catalog2+"/CATALOG_WEBSERVICE_IP/info"
+        print(ip)
+        query =  requests.get(ip)
+
     queryResponse = json.loads(query.text)
     return queryResponse
 
@@ -28,7 +37,15 @@ def get_book_by_id(id):
     global robin
     robin = not robin
     if(id not in cache):
-        cache[id] = requests.get((catalog1 if robin else catalog2)+"/CATALOG_WEBSERVICE_IP/info/%s" % id).content
+        if robin:
+            ip = catalog1+"/CATALOG_WEBSERVICE_IP/info/"
+            print(ip)
+        else:
+            ip = catalog2+"/CATALOG_WEBSERVICE_IP/info/"
+        print(ip)
+        ip = ip + str(id)
+        query = requests.get(ip).text
+        cache[id] = json.loads(query)
     print(cache)
     return cache[id]
 
@@ -38,16 +55,32 @@ def searchBookByTopic(topic):
     global robin
     robin = not robin
     if (topic not in cache):
-        cache[topic] = requests.get((catalog1 if robin else catalog2)+"/CATALOG_WEBSERVICE_IP/search/%s" % topic).content
+        if robin:
+            ip = catalog1+"/CATALOG_WEBSERVICE_IP/search/"
+            print(ip)
+        else:
+            ip = catalog2+"/CATALOG_WEBSERVICE_IP/search/"
+        print(ip)
+        ip = ip + topic
+        cache[topic] = json.loads(requests.get(ip).text)
     return cache[topic]
 
 def purchase(id):
     global robin
     robin = not robin
+    
+    if robin:
+        ip = oreder1+"/ORDER_WEBSERVICE_IP/purchase/"
+        print(ip)
+        ip = ip + str(id)
+    else:
+        ip = oreder2+"/ORDER_WEBSERVICE_IP/purchase/"
+        print(ip)
+        ip = ip + str(id)
     if (id in cache):
-        cache.pop(id)
-    requests.get((oreder1) + "/ORDER_WEBSERVICE_IP/purchase/%s" % id)
-    return requests.get((oreder2)+"/ORDER_WEBSERVICE_IP/purchase/%s" % id).content
+        cache.pop(id)    
+    respose = requests.get(ip).text
+    return json.loads(respose)
 
     
 @ClientService.route("/Bazar/info")
