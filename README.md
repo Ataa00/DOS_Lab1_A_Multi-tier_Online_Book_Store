@@ -10,8 +10,8 @@ This project is about create a multi-tier online book store called Bazar.com
 - The five services should be running
 - The Client-Service can be accessed on [localhost:8080](http://localhost:8080)
 - The catalog-Service1 can be accessed on [localhost:8081](http://localhost:8081)
-- The catalog-Service2 can be accessed on [localhost:8081](http://localhost:8082)
-- The orders-Service1 can be accessed on [localhost:8082](http://localhost:8083)
+- The catalog-Service2 can be accessed on [localhost:8081](http://localhost:8083)
+- The orders-Service1 can be accessed on [localhost:8082](http://localhost:8082)
 - The orders-Service2 can be accessed on [localhost:8082](http://localhost:8084)
 
 ## Orders Server Endpoints 
@@ -36,10 +36,13 @@ A GUI can be used with FrontEnd server
 # Output Screenshots
 screenshots showing the output of each operation on the clientservice server using Postman
 /info
-
-
-/search/<topic>
+![image](infoall.png)
 
 /info/<id>
+![image](info.png)
+
+/search/<topic>
+![image](topic.png)
 
 /purchase/<id>
+![image](purchase.png)
