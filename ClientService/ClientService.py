@@ -15,7 +15,6 @@ oreder2 = "http://order2:5000"
 #load balancing alg round-robin
 robin = False
 
-
 #forward to catalog server-info
 def get_books():
    
@@ -81,7 +80,6 @@ def purchase(id):
         cache.pop(id)    
     respose = requests.get(ip).text
     return json.loads(respose)
-
     
 @ClientService.route("/Bazar/info")
 def books_api():

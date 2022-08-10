@@ -2,7 +2,6 @@ from flask import Flask,Blueprint, render_template, request, jsonify ,url_for, f
 import sqlite3
 import requests
 import json
-import os
 
 catalog1 = "http://catalog:5000"
 

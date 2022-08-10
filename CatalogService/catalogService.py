@@ -112,11 +112,6 @@ def findBook(id):
         book["price"] = row["price"]
         book["id"] = row["id"]
         response["beforePurchased"] = book
-        print()
-        print()
-        print(book)
-        print()
-        print()
         conn.close()
     except Exception as e:
         print(e)
