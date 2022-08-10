@@ -35,18 +35,19 @@ A GUI can be used with FrontEnd server
 
 # Output Screenshots
 screenshots showing the output of each operation on the clientservice server using Postman
-/info
+
+## /info
 
 ![image](infoall.png)
 
-/info/<id>
+## /info/<id>
 
   ![image](info.png)
 
-/search/<topic>
+## /search/<topic>
 
   ![image](topic.png)
 
-/purchase/<id>
+## /purchase/<id>
 
   ![image](purchase.png)
