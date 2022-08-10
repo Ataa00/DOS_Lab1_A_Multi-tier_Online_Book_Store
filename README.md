@@ -40,14 +40,14 @@ screenshots showing the output of each operation on the clientservice server usi
 
 ![image](infoall.png)
 
-## /info/ <id>
+## /info/id
 
   ![image](info.png)
 
-## /search/ <topic>
+## /search/topic
 
   ![image](topic.png)
 
-## /purchase/ <id>
+## /purchase/id
 
   ![image](purchase.png)
